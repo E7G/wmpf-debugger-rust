@@ -1,5 +1,7 @@
 # WMPF Debugger (Rust)
 
+[English](README.md) | [中文](README.zh.md)
+
 A WeChat Mini Program (WMPF) remote debugger written in pure Rust.
 
 This tool intercepts the communication between WeChatAppEx.exe and the Chrome DevTools Protocol (CDP), allowing you to debug WeChat Mini Programs using standard browser developer tools.

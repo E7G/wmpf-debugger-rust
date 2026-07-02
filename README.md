@@ -1,36 +1,36 @@
-# WMPF Debugger (Rust)
+# WMPF 调试器 (Rust)
 
-[English](README.md) | [中文](README.zh.md)
+[English](README.en.md) | 中文
 
-A WeChat Mini Program (WMPF) remote debugger written in pure Rust.
+一个用纯 Rust 编写的微信小程序 (WMPF) 远程调试工具。
 
-This tool intercepts the communication between WeChatAppEx.exe and the Chrome DevTools Protocol (CDP), allowing you to debug WeChat Mini Programs using standard browser developer tools.
+该工具拦截 WeChatAppEx.exe 与 Chrome DevTools Protocol (CDP) 之间的通信，允许你使用标准浏览器开发者工具调试微信小程序。
 
-## Architecture
+## 架构
 
 ```
 ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│   WeChatAppEx    │────▶│  WMPF Debugger   │────▶│  Chrome DevTools │
-│   (Mini Program) │     │  (Rust)          │     │  Inspector       │
+│   WeChatAppEx    │────▶│  WMPF 调试器     │────▶│  Chrome DevTools │
+│   (小程序进程)    │     │  (Rust)          │     │  Inspector       │
 │                  │◀────│                  │◀────│                  │
 └──────────────────┘     └──────────────────┘     └──────────────────┘
       ws://localhost:9421        ↕           ws://localhost:62666
                               Frida
-                           (script inject)
+                           (脚本注入)
 ```
 
-1. **Frida** injects a hook script into WeChatAppEx.exe to enable the remote debug protocol
-2. **Debug Server** (port 9421) receives protobuf-encoded debug messages from the mini program
-3. **CDP Proxy** (port 62666) translates between the internal protocol and Chrome DevTools Protocol
+1. **Frida** 向 WeChatAppEx.exe 注入钩子脚本，启用远程调试协议
+2. **调试服务器** (端口 9421) 接收小程序发送的 protobuf 编码调试消息
+3. **CDP 代理** (端口 62666) 在内部协议与 Chrome DevTools Protocol 之间转换
 
-## Installation
+## 安装
 
-### Download Pre-built Binaries (Recommended)
+### 下载预编译二进制文件（推荐）
 
-Download the latest release for your platform from [GitHub Releases](https://github.com/E7G/wmpf-debugger-rust/releases):
+从 [GitHub Releases](https://github.com/E7G/wmpf-debugger-rust/releases) 下载最新版本：
 
-| Platform | File |
-|----------|------|
+| 平台 | 文件 |
+|------|------|
 | Windows x64 | `wmpf-debugger-x86_64-pc-windows-msvc.exe` |
 | Linux x64 | `wmpf-debugger-x86_64-unknown-linux-gnu` |
 | macOS x64 | `wmpf-debugger-x86_64-apple-darwin` |
@@ -48,32 +48,32 @@ curl -LO https://github.com/E7G/wmpf-debugger-rust/releases/latest/download/wmpf
 chmod +x wmpf-debugger-x86_64-apple-darwin
 ```
 
-### Build from Source
+### 从源码编译
 
-**Prerequisites:**
+**前置要求：**
 - [Rust](https://rustup.rs/) (1.70+)
-- [protobuf compiler](https://github.com/protocolbuffers/protobuf/releases) (`protoc`)
+- [protobuf 编译器](https://github.com/protocolbuffers/protobuf/releases) (`protoc`)
 
 ```bash
-# Clone the repository
+# 克隆仓库
 git clone https://github.com/E7G/wmpf-debugger-rust.git
 cd wmpf-debugger-rust
 
-# Build without Frida (WebSocket servers only)
+# 不带 Frida 编译（仅 WebSocket 服务器）
 cargo build --release
 
-# Build with Frida integration (requires frida-core devkit)
-# 1. Download frida-core-devkit from https://github.com/frida/frida/releases
-# 2. Extract to frida-devkit/ in the project root
-# 3. Build with feature flag
+# 带 Frida 集成编译（需要 frida-core devkit）
+# 1. 从 https://github.com/frida/frida/releases 下载 frida-core-devkit
+# 2. 解压到项目根目录的 frida-devkit/ 文件夹
+# 3. 使用 feature flag 编译
 cargo build --release --features frida-link
 ```
 
-The binary will be at `target/release/wmpf-debugger.exe` (Windows) or `target/release/wmpf-debugger` (Linux/macOS).
+编译后的二进制文件位于 `target/release/wmpf-debugger.exe` (Windows) 或 `target/release/wmpf-debugger` (Linux/macOS)。
 
-## Usage
+## 使用方法
 
-### 1. Start the Debugger
+### 1. 启动调试器
 
 ```bash
 # Windows
@@ -83,81 +83,81 @@ wmpf-debugger.exe
 ./wmpf-debugger-x86_64-unknown-linux-gnu
 ```
 
-Make sure WeChat DevTools is running (WeChatAppEx.exe process must be active).
+确保微信开发者工具正在运行（WeChatAppEx.exe 进程必须处于活动状态）。
 
-### 2. Open Chrome DevTools
+### 2. 打开 Chrome DevTools
 
-Navigate to:
+在浏览器中访问：
 ```
 devtools://devtools/bundled/inspector.html?ws=127.0.0.1:62666
 ```
 
-### 3. Debug Your Mini Program
+### 3. 调试小程序
 
-Open any mini program in WeChat DevTools - the debugger will automatically attach and you can use Chrome DevTools to inspect it.
+在微信开发者工具中打开任意小程序 - 调试器会自动连接，你可以使用 Chrome DevTools 进行调试。
 
-### Command-line Options
+### 命令行参数
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--debug-port <port>` | Debug server WebSocket port | 9421 |
-| `--cdp-port <port>` | CDP proxy WebSocket port | 62666 |
-| `--debug-main` | Output main process debug messages | false |
-| `--debug-frida` | Output Frida client messages | false |
-| `-h, --help` | Show help message | |
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `--debug-port <port>` | 调试服务器 WebSocket 端口 | 9421 |
+| `--cdp-port <port>` | CDP 代理 WebSocket 端口 | 62666 |
+| `--debug-main` | 输出主进程调试消息 | false |
+| `--debug-frida` | 输出 Frida 客户端消息 | false |
+| `-h, --help` | 显示帮助信息 | |
 
 ```bash
-# Example: custom ports with debug output
+# 示例：自定义端口并开启调试输出
 wmpf-debugger.exe --debug-port 9421 --cdp-port 62666 --debug-main --debug-frida
 ```
 
-## How It Works
+## 工作原理
 
-1. Attaches to WeChatAppEx.exe via Frida
-2. Extracts WMPF version from the process path (e.g., `...\14185\...`)
-3. Loads version-specific hook script from `frida/hook.js`
-4. Patches the CDP filter to allow remote debugging
-5. Modifies the mini program scene to enable debug mode
-6. Proxies debug messages between the mini program and Chrome DevTools
+1. 通过 Frida 附加到 WeChatAppEx.exe 进程
+2. 从进程路径中提取 WMPF 版本号（如 `...\14185\...`）
+3. 加载版本对应的钩子脚本 `frida/hook.js`
+4. 修补 CDP 过滤器以允许远程调试
+5. 修改小程序场景以启用调试模式
+6. 在小程序与 Chrome DevTools 之间代理调试消息
 
-## Project Structure
+## 项目结构
 
 ```
 src/
-├── main.rs           # Entry point, spawns all servers
-├── cli.rs            # Command-line argument parsing
-├── logger.rs         # Colored logging
-├── constants.rs      # Protocol constants and enums
-├── proto.rs          # Protobuf generated types (prost)
-├── codex.rs          # Protobuf encode/decode + Zlib compression
-├── frida_ffi.rs      # Raw FFI bindings to Frida C API (behind frida-link feature)
-├── frida_server.rs   # Frida integration (process attach, script inject)
-├── debug_server.rs   # WebSocket server for mini program connections
-└── proxy_server.rs   # WebSocket server for CDP connections
+├── main.rs           # 入口，启动所有服务器
+├── cli.rs            # 命令行参数解析
+├── logger.rs         # 彩色日志
+├── constants.rs      # 协议常量和枚举
+├── proto.rs          # Protobuf 生成类型 (prost)
+├── codex.rs          # Protobuf 编解码 + Zlib 压缩
+├── frida_ffi.rs      # Frida C API 原始 FFI 绑定 (frida-link feature)
+├── frida_server.rs   # Frida 集成（进程附加、脚本注入）
+├── debug_server.rs   # 小程序连接的 WebSocket 服务器
+└── proxy_server.rs   # CDP 连接的 WebSocket 服务器
 
 proto/
-└── wa_remote_debug.proto  # WeChat remote debug protocol definition
+└── wa_remote_debug.proto  # 微信远程调试协议定义
 
 frida/
-├── hook.js           # Frida hook script
-└── config/           # Version-specific memory addresses (45 versions)
+├── hook.js           # Frida 钩子脚本
+└── config/           # 版本特定的内存地址 (45 个版本)
 ```
 
-## Troubleshooting
+## 故障排除
 
-| Issue | Solution |
-|-------|----------|
-| "WeChatAppEx.exe process not found" | Make sure WeChat DevTools is running |
-| "error finding WMPF version" | Your WMPF version may not be supported (check `frida/config/`) |
-| "hook script not found" | Ensure `frida/hook.js` is in the working directory |
-| Port already in use | Change ports with `--debug-port` and `--cdp-port` |
-| Frida not available | Build with `--features frida-link` and provide frida-core devkit |
+| 问题 | 解决方案 |
+|------|----------|
+| "WeChatAppEx.exe process not found" | 确保微信开发者工具正在运行 |
+| "error finding WMPF version" | 你的 WMPF 版本可能不受支持（检查 `frida/config/`） |
+| "hook script not found" | 确保 `frida/hook.js` 在工作目录中 |
+| 端口已被占用 | 使用 `--debug-port` 和 `--cdp-port` 更改端口 |
+| Frida 不可用 | 使用 `--features frida-link` 编译并提供 frida-core devkit |
 
-## Acknowledgments
+## 致谢
 
-- Original TypeScript implementation: [WMPFDebugger](https://github.com/nicennnnnnnlee/WMPFDebugger) by evi0s
-- [Frida](https://frida.re/) - Dynamic instrumentation toolkit
+- 原始 TypeScript 实现：[WMPFDebugger](https://github.com/nicennnnnnnlee/WMPFDebugger) by evi0s
+- [Frida](https://frida.re/) - 动态插桩工具包
 
-## License
+## 许可证
 
 GPL-2.0-only

@@ -1,0 +1,292 @@
+syntax = "proto3";
+package mmbizwxadevremote;
+
+message WARemoteDebug_DataFormat {
+  uint32 cmd = 1;
+  string uuid = 2;
+  bytes data = 3;
+}
+
+message WARemoteDebug_BaseReq {
+  uint32 clientVersion = 1;
+}
+
+message WARemoteDebug_BaseResp {
+  int32 errcode = 1;
+  string errmsg = 2;
+}
+
+message WARemoteDebug_CommReq {
+  WARemoteDebug_BaseReq baseRequest = 1;
+}
+
+message WARemoteDebug_CommResp {
+  WARemoteDebug_BaseResp baseResponse = 1;
+}
+
+message WARemoteDebug_DebugMessage {
+  uint32 seq = 1;
+  uint32 after = 2;
+  string category = 3;
+  bytes data = 4;
+  uint32 compressAlgo = 5;
+  uint32 originalSize = 6;
+}
+
+message WARemoteDebug_DevLoginReq {
+  WARemoteDebug_BaseReq baseRequest = 1;
+  string newticket = 2;
+  string autodev = 3;
+}
+
+message WARemoteDebug_DevLoginResp {
+  WARemoteDebug_BaseResp baseResponse = 1;
+  WARemoteDebug_RoomInfo roomInfo = 2;
+}
+
+message WARemoteDebug_RoomInfo {
+  uint32 joinRoom = 1;
+  string originalMd5 = 2;
+  uint32 roomStatus = 3;
+  uint32 wxConnStatus = 4;
+  uint32 devConnStatus = 5;
+  string roomId = 6;
+}
+
+message WARemoteDebug_DevJoinRoomReq {
+  WARemoteDebug_BaseReq baseRequest = 1;
+  string appid = 2;
+  string roomId = 3;
+  string wxpkgInfo = 4;
+}
+
+message WARemoteDebug_DevJoinRoomResp {
+  WARemoteDebug_BaseResp baseResponse = 1;
+}
+
+message WARemoteDebug_DevHeartBeatReq {
+  WARemoteDebug_BaseReq baseRequest = 1;
+  uint32 recvAck = 2;
+}
+
+message WARemoteDebug_DevHeartBeatResp {
+  WARemoteDebug_BaseResp baseResponse = 1;
+}
+
+message WARemoteDebug_DevQuitRoomReq {
+  WARemoteDebug_BaseReq baseRequest = 1;
+}
+
+message WARemoteDebug_DevQuitRoomResp {
+  WARemoteDebug_BaseResp baseResponse = 1;
+}
+
+message WARemoteDebug_DevSyncMessageReq {
+  WARemoteDebug_BaseReq baseRequest = 1;
+  uint32 minSeq = 2;
+  uint32 maxSeq = 3;
+}
+
+message WARemoteDebug_DevSyncMessageResp {
+  WARemoteDebug_BaseResp baseResponse = 1;
+  repeated WARemoteDebug_DebugMessage debugMessageList = 2;
+  uint32 sendAck = 3;
+}
+
+message WARemoteDebug_SendDebugMessageReq {
+  WARemoteDebug_BaseReq baseRequest = 1;
+  uint32 recvAck = 2;
+  repeated WARemoteDebug_DebugMessage debugMessageList = 3;
+}
+
+message WARemoteDebug_SendDebugMessageResp {
+  WARemoteDebug_BaseResp baseResponse = 1;
+  uint32 sendAck = 2;
+}
+
+message WARemoteDebug_NewSendDebugMessageReq {
+  WARemoteDebug_BaseReq baseRequest = 1;
+  uint32 recvAck = 2;
+  repeated WARemoteDebug_DebugMessage debugMessageList = 3;
+}
+
+message WARemoteDebug_NewSendDebugMessageResp {
+  WARemoteDebug_BaseResp baseResponse = 1;
+  uint32 maxAck = 2;
+  uint32 minAck = 3;
+}
+
+message WARemoteDebug_MessageNotify {
+  repeated WARemoteDebug_DebugMessage debugMessageList = 1;
+}
+
+message WARemoteDebug_EventNotify {
+  WARemoteDebug_BaseResp baseResponse = 1;
+}
+
+message WARemoteDebug_WxLoginReq {
+  uint32 baseRequest = 1;
+  string loginTicket = 2;
+}
+
+message WARemoteDebug_WxLoginResp {
+  WARemoteDebug_BaseResp baseResponse = 1;
+  WARemoteDebug_RoomInfo roomInfo = 2;
+}
+
+message WARemoteDebug_WxJoinRoomReq {
+  uint32 baseRequest = 1;
+  string wxpkgInfo = 2;
+  string username = 3;
+  string roomId = 4;
+}
+
+message WARemoteDebug_WxJoinRoomResp {
+  WARemoteDebug_BaseResp baseResponse = 1;
+}
+
+message WARemoteDebug_WxHeartBeatReq {
+  uint32 baseRequest = 1;
+  uint32 recvAck = 2;
+}
+
+message WARemoteDebug_WxHeartBeatResp {
+  WARemoteDebug_BaseResp baseResponse = 1;
+}
+
+message WARemoteDebug_WxQuitRoomReq {
+  uint32 baseRequest = 1;
+}
+
+message WARemoteDebug_WxQuitRoomResp {
+  WARemoteDebug_BaseResp baseResponse = 1;
+}
+
+message WARemoteDebug_WxSyncMessageReq {
+  uint32 baseRequest = 1;
+  uint32 minSeq = 2;
+  uint32 maxSeq = 3;
+}
+
+message WARemoteDebug_WxSyncMessageResp {
+  WARemoteDebug_BaseResp baseResponse = 1;
+  repeated WARemoteDebug_DebugMessage debugMessageList = 2;
+  uint32 sendAck = 3;
+}
+
+message WARemoteDebug_CallInterface {
+  string objName = 1;
+  string methodName = 2;
+  repeated string methodArgList = 3;
+  string callId = 4;
+}
+
+message WARemoteDebug_CallInterfaceResult {
+  string ret = 1;
+  string callId = 2;
+  string debugInfo = 3;
+}
+
+message WARemoteDebug_EvaluateJavascript {
+  string script = 1;
+  string evaluateId = 2;
+  string debugInfo = 3;
+}
+
+message WARemoteDebug_EvaluateJavascriptResult {
+  string ret = 1;
+  string evaluateId = 2;
+}
+
+message WARemoteDebug_Ping {
+  string pingId = 1;
+  bytes payload = 2;
+}
+
+message WARemoteDebug_Pong {
+  string pingId = 1;
+  int64 networkType = 2;
+  bytes payload = 3;
+}
+
+message WARemoteDebug_Breakpoint {
+  bool isHit = 1;
+}
+
+message WARemoteDebug_SetupContext {
+  WARemoteDebug_RegisterInterface registerInterface = 1;
+  string configureJs = 2;
+  string publicJsMd5 = 3;
+  string threeJsMd5 = 4;
+  WARemoteDebug_DeviceInfo deviceInfo = 5;
+  uint32 supportCompressAlgo = 6;
+}
+
+message WARemoteDebug_RegisterInterface {
+  string objName = 1;
+  repeated WARemoteDebug_MethodInfo objMethodList = 2;
+}
+
+message WARemoteDebug_MethodInfo {
+  string methodName = 1;
+  repeated string methodArgList = 2;
+}
+
+message WARemoteDebug_DeviceInfo {
+  string deviceName = 1;
+  string deviceModel = 2;
+  string systemVersion = 3;
+  string wechatVersion = 4;
+  string pixelRatio = 5;
+  string screenWidth = 6;
+  string publibVersion = 7;
+  string userAgent = 8;
+}
+
+message WARemoteDebug_DomOp {
+  string params = 1;
+  string webviewId = 2;
+}
+
+message WARemoteDebug_DomEvent {
+  string params = 1;
+  string webviewId = 2;
+}
+
+message WARemoteDebug_NetworkDebugAPI {
+  string apiName = 1;
+  string taskId = 2;
+  string requestHeaders = 3;
+  string timestamp = 4;
+}
+
+message WARemoteDebug_ChromeDevtools {
+  uint32 opId = 1;
+  string payload = 2;
+  string jscontextId = 3;
+}
+
+message WARemoteDebug_ChromeDevtoolsResult {
+  uint32 opId = 1;
+  string payload = 2;
+  string jscontextId = 3;
+}
+
+message WARemoteDebug_AddJsContext {
+  string jscontextId = 1;
+  string jscontextName = 2;
+}
+
+message WARemoteDebug_RemoveJsContext {
+  string jscontextId = 1;
+}
+
+message WARemoteDebug_ConnectJsContext {
+  string jscontextId = 1;
+}
+
+message WARemoteDebug_CustomMessage {
+  string method = 1;
+  string payload = 2;
+  string raw = 3;
+}

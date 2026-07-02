@@ -1,0 +1,4 @@
+/target
+/frida-devkit
+*.exe
+*.pdb

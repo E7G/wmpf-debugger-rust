@@ -1,0 +1,24 @@
+[package]
+name = "wmpf-debugger"
+version = "0.1.0"
+edition = "2021"
+license = "GPL-2.0-only"
+description = "A WeChat Mini Program (WMPF) debugger written in pure Rust"
+repository = "https://github.com/user/wmpf-debugger-rust"
+
+[features]
+default = []
+frida-link = []
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+tokio-tungstenite = { version = "0.24", features = ["native-tls"] }
+tungstenite = "0.24"
+prost = "0.13"
+flate2 = "1"
+serde_json = "1"
+colored = "2"
+futures-util = "0.3"
+
+[build-dependencies]
+prost-build = "0.13"
